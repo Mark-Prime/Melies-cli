@@ -5,23 +5,32 @@ use clap::{Parser, Subcommand};
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Args {
+    #[command(subcommand)]
+    cmd: Commands,
+
     /// Turn debugging information on
     #[arg(short, long, default_value_t = false)]
     verbose: bool,
-
-    #[command(subcommand)]
-    cmd: Commands
 }
 
 #[derive(Subcommand, Debug, Clone)]
 enum Commands {
-    /// Add a Get command
+    /// Get all of the players in a demo
     GetPlayers {
         /// path to the demo
         demo: String,
 
         /// path to the output
         #[arg(short, long, default_value_t = String::from("players.json"))]
+        output: String
+    },
+    /// Get the chat from a demo
+    GetChat {
+        /// path to the demo
+        demo: String,
+
+        /// path to the output
+        #[arg(short, long, default_value_t = String::from("chat.json"))]
         output: String
     },
 }
@@ -32,6 +41,9 @@ fn main() {
     match args.cmd {
         Commands::GetPlayers { demo, output } => {
             demos::get_players(&demo, &output);
+        },
+        Commands::GetChat { demo, output } => {
+            demos::get_chat(&demo, &output);
         }
     }
 }

@@ -28,7 +28,7 @@ use steamid_ng::SteamID;
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ChatMessage {
   pub kind: ChatMessageKind,
-  pub from: EntityId,
+  pub entity_id: EntityId,
   pub name: String,
   pub text: String,
   pub tick: DemoTick,
@@ -43,7 +43,7 @@ impl ChatMessage {
         .as_ref()
         .map(|s| s.to_string())
         .unwrap_or_default(),
-      from: message.client,
+      entity_id: message.client,
       text: message.plain_text(),
       tick,
       // message: message.clone()
@@ -224,10 +224,11 @@ pub struct UserInfo {
   pub classes: ClassList,
   pub name: String,
   pub aliases: Vec<Alias>,
+  // #[serde(skip)]
   pub user_id: UserId,
   pub steam_id: String,
   pub steam_id64: String,
-  #[serde(skip)]
+  // #[serde(skip)]
   pub entity_id: EntityId,
   pub team: Team,
 }

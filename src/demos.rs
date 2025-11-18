@@ -648,32 +648,16 @@ pub(crate) fn scan_demo(file_path: String) -> Value {
 
   killstreak_pointers.sort_by_key(|ks| ks.average);
 
-  let start_tick = state.start_tick;
-
-  let ticks = header.ticks;
-
   let resp =
     json!({
-      "header": {
-        "demo_type": header.demo_type,
-        "version": header.version,
-        "protocol": header.protocol,
-        "server": header.server,
-        "nick": header.nick,
-        "map": header.map,
-        "game": header.game,
-        "duration": header.duration,
-        "ticks": ticks,
-        "frames": header.frames,
-        "signon": header.signon,
-      },
+      "header": header,
       "data": {
         "deaths": state.deaths,
         "spawns": state.spawns,
         "rounds": state.rounds,
         "users": state.users,
         "chat": state.chat,
-        "start_tick": start_tick,
+        "start_tick": state.start_tick,
         "end_tick": state.end_tick,
         "user_events": sorted_events,
         "player_lives": player_lives,
@@ -683,8 +667,6 @@ pub(crate) fn scan_demo(file_path: String) -> Value {
         "pauses": state.pauses,
         "ubers": state.ubers
       },
-      "loaded": true,
-      "loading": false
     });
 
   Value::from(resp)
@@ -734,6 +716,26 @@ pub fn get_players (demo: &str, output: &str) -> Value {
     "header": res["header"],
     "data": {
       "users": res["data"]["users"]
+    }
+  });
+
+  let file = fs::File::create(output).unwrap();
+
+  let writer = std::io::BufWriter::new(file);
+  serde_json::to_writer_pretty(writer, &new_res).unwrap();
+
+  Value::from(new_res)
+}
+
+pub fn get_chat (demo: &str, output: &str) -> Value {
+  let file_path = format!("{}", demo);
+
+  let res = scan_demo(file_path);
+  
+  let new_res = json!({
+    "header": res["header"],
+    "data": {
+      "chat": res["data"]["chat"]
     }
   });
 
