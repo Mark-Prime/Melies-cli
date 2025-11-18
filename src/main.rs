@@ -19,7 +19,6 @@ enum Commands {
     GetPlayers {
         /// path to the demo
         demo: String,
-
         /// path to the output
         #[arg(short, long, default_value_t = String::from("players.json"))]
         output: String
@@ -28,11 +27,18 @@ enum Commands {
     GetChat {
         /// path to the demo
         demo: String,
-
         /// path to the output
         #[arg(short, long, default_value_t = String::from("chat.json"))]
         output: String
     },
+    /// Get both the players and the chat
+    GetInfo {
+        /// path to the demo
+        demo: String,
+        /// path to the output
+        #[arg(short, long, default_value_t = String::from("demo_info.json"))]
+        output: String
+    }
 }
 
 fn main() {
@@ -44,6 +50,9 @@ fn main() {
         },
         Commands::GetChat { demo, output } => {
             demos::get_chat(&demo, &output);
+        }
+        Commands::GetInfo { demo, output } => {
+            demos::get_info(&demo, &output);
         }
     }
 }

@@ -707,7 +707,7 @@ pub(crate) fn scan_demo(file_path: String) -> Value {
 //   json!(demos)
 // }
 
-pub fn get_players (demo: &str, output: &str) -> Value {
+pub fn get_info(demo: &str, output: &str) -> Value {
   let file_path = format!("{}", demo);
 
   let res = scan_demo(file_path);
@@ -715,7 +715,8 @@ pub fn get_players (demo: &str, output: &str) -> Value {
   let new_res = json!({
     "header": res["header"],
     "data": {
-      "users": res["data"]["users"]
+      "players": res["data"]["users"],
+      "chat": res["data"]["chat"],
     }
   });
 
@@ -727,16 +728,32 @@ pub fn get_players (demo: &str, output: &str) -> Value {
   Value::from(new_res)
 }
 
-pub fn get_chat (demo: &str, output: &str) -> Value {
+pub fn get_players(demo: &str, output: &str) -> Value {
   let file_path = format!("{}", demo);
 
   let res = scan_demo(file_path);
   
   let new_res = json!({
     "header": res["header"],
-    "data": {
-      "chat": res["data"]["chat"]
-    }
+    "data": res["data"]["users"]
+  });
+
+  let file = fs::File::create(output).unwrap();
+
+  let writer = std::io::BufWriter::new(file);
+  serde_json::to_writer_pretty(writer, &new_res).unwrap();
+
+  Value::from(new_res)
+}
+
+pub fn get_chat(demo: &str, output: &str) -> Value {
+  let file_path = format!("{}", demo);
+
+  let res = scan_demo(file_path);
+  
+  let new_res = json!({
+    "header": res["header"],
+    "data": res["data"]["chat"]
   });
 
   let file = fs::File::create(output).unwrap();
