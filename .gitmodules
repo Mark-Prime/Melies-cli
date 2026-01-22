@@ -1,3 +1,6 @@
-[submodule "origin"]
+[submodule "Melies-rust"]
+	path = Melies-rust
+	url = https://github.com/Mark-Prime/Melies-rust
+[submodule "parser"]
 	path = parser
 	url = https://codeberg.org/demostf/parser

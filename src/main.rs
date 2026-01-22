@@ -1,4 +1,4 @@
-mod demos;
+use melies_rust;
 
 use clap::{Parser, Subcommand};
 
@@ -20,7 +20,7 @@ enum Commands {
         /// path to the demo
         demo: String,
         /// path to the output
-        #[arg(short, long, default_value_t = String::from("players.json"))]
+        #[arg(short, long, default_value_t = String::from(""))]
         output: String
     },
     /// Get the chat from a demo
@@ -28,7 +28,7 @@ enum Commands {
         /// path to the demo
         demo: String,
         /// path to the output
-        #[arg(short, long, default_value_t = String::from("chat.json"))]
+        #[arg(short, long, default_value_t = String::from(""))]
         output: String
     },
     /// Get both the players and the chat
@@ -36,7 +36,7 @@ enum Commands {
         /// path to the demo
         demo: String,
         /// path to the output
-        #[arg(short, long, default_value_t = String::from("demo_info.json"))]
+        #[arg(short, long, default_value_t = String::from(""))]
         output: String
     }
 }
@@ -46,13 +46,13 @@ fn main() {
 
     match args.cmd {
         Commands::GetPlayers { demo, output } => {
-            demos::get_players(&demo, &output);
+            melies_rust::demos::get_players(&demo, &output);
         },
         Commands::GetChat { demo, output } => {
-            demos::get_chat(&demo, &output);
+            melies_rust::demos::get_chat(&demo, &output);
         }
         Commands::GetInfo { demo, output } => {
-            demos::get_info(&demo, &output);
+            melies_rust::demos::get_info(&demo, &output);
         }
     }
 }
